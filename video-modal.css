@@ -1,0 +1,50 @@
+/* Video popup (video + breakdown) */
+.video-modal{
+  position:fixed;inset:0;z-index:1000;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.82);
+  backdrop-filter:blur(6px);
+}
+.vm-panel{
+  position:relative;
+  width:min(1040px,100%);
+  max-height:calc(100vh - 40px);
+  overflow-y:auto;
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+  gap:24px;
+  padding:24px;
+  border-radius:20px;
+  background:#111;color:#fff;
+  border:1px solid rgba(255,255,255,.14);
+  text-align:left;
+}
+.vm-close{
+  position:absolute;top:10px;right:12px;z-index:2;
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.25);
+  background:rgba(0,0,0,.5);color:#fff;font-size:1.2rem;line-height:1;cursor:pointer;
+}
+.vm-stage{
+  display:flex;align-items:center;justify-content:center;
+  background:#000;border-radius:14px;overflow:hidden;
+  min-height:220px;
+}
+.vm-video{display:block;width:100%;max-height:70vh;background:#000;}
+.vm-empty,.vm-error{padding:30px;text-align:center;font-size:.92rem;opacity:.8;line-height:1.6;}
+.vm-tag{display:inline-block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;opacity:.65;margin-bottom:8px;}
+.vm-title{margin:0 0 14px;font-size:1.35rem;line-height:1.25;padding-right:40px;}
+.vm-steps{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:14px;}
+.vm-steps li{display:grid;grid-template-columns:auto 1fr;gap:12px;}
+.vm-steps .vm-num{font-size:.78rem;font-weight:700;opacity:.5;padding-top:2px;}
+.vm-steps strong{display:block;font-size:.95rem;margin-bottom:2px;}
+.vm-steps span{font-size:.88rem;opacity:.78;line-height:1.55;}
+.vm-credit{margin:0 0 16px;font-size:.8rem;opacity:.6;}
+.vm-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.vm-chips span{font-size:.76rem;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.25);}
+
+@media (max-width:860px){
+  .video-modal{padding:10px;}
+  .vm-panel{grid-template-columns:1fr;padding:14px;gap:16px;max-height:calc(100vh - 20px);}
+}
