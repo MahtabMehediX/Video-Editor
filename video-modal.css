@@ -32,6 +32,7 @@
   min-height:220px;
 }
 .vm-video{display:block;width:100%;max-height:70vh;background:#000;}
+.vm-frame{display:block;border:0;background:#000;}
 .vm-empty,.vm-error{padding:30px;text-align:center;font-size:.92rem;opacity:.8;line-height:1.6;}
 .vm-tag{display:inline-block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;opacity:.65;margin-bottom:8px;}
 .vm-title{margin:0 0 14px;font-size:1.35rem;line-height:1.25;padding-right:40px;}

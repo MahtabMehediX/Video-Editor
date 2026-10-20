@@ -147,10 +147,14 @@ if(navLinksEl){
 
 
 // Work cards: click a card to play its video + see the edit breakdown
+// Video source (first match wins):
+//   data-youtube="https://youtu.be/XXXXXXXXXXX"   (YouTube link or 11-char ID; add data-ratio="9/16" for vertical)
+//   data-video="assets/file.mp4"                  (small MP4 inside the repo)
 (function(){
     const modal = document.getElementById("videoModal");
     if(!modal) return;
 
+    const stage    = modal.querySelector(".vm-stage");
     const player   = modal.querySelector(".vm-video");
     const emptyMsg = modal.querySelector(".vm-empty");
     const errorMsg = modal.querySelector(".vm-error");
@@ -159,27 +163,65 @@ if(navLinksEl){
     const detailEl = modal.querySelector(".vm-detail");
     const closeBtn = modal.querySelector(".vm-close");
     let lastFocus = null;
+    let frame = null;
+
+    function ytId(v){
+        v = (v || "").trim();
+        const m = v.match(/(?:youtu\.be\/|v=|embed\/|shorts\/|live\/)([\w-]{11})/);
+        if(m) return m[1];
+        return /^[\w-]{11}$/.test(v) ? v : "";
+    }
+
+    function removeFrame(){
+        if(frame){ frame.remove(); frame = null; }
+    }
+
+    function showFrame(id, ratio, title){
+        frame = document.createElement("iframe");
+        frame.className = "vm-frame";
+        frame.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&rel=0&playsinline=1";
+        frame.title = title;
+        frame.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+        frame.allowFullscreen = true;
+        frame.style.aspectRatio = ratio;
+        if(ratio === "9/16"){
+            frame.style.height = "70vh";
+            frame.style.width = "auto";
+            frame.style.maxWidth = "100%";
+        } else {
+            frame.style.width = "100%";
+            frame.style.height = "auto";
+        }
+        stage.appendChild(frame);
+    }
 
     function openModal(card){
         lastFocus = document.activeElement;
 
+        const title = card.querySelector(".work-meta h3").textContent;
+        const yt  = ytId(card.dataset.youtube);
         const src = card.dataset.video || "";
-        titleEl.textContent = card.querySelector(".work-meta h3").textContent;
+
+        titleEl.textContent = title;
         tagEl.textContent   = card.querySelector(".work-meta span").textContent;
 
         detailEl.innerHTML = "";
         const tpl = card.querySelector("template");
         if(tpl) detailEl.appendChild(tpl.content.cloneNode(true));
 
+        removeFrame();
         errorMsg.hidden = true;
-        if(src){
-            emptyMsg.hidden = true;
+        emptyMsg.hidden = true;
+        player.hidden = true;
+
+        if(yt){
+            showFrame(yt, card.dataset.ratio || "16/9", title);
+        } else if(src){
             player.hidden = false;
             player.src = src;
             player.load();
             player.play().catch(()=>{});
         } else {
-            player.hidden = true;
             emptyMsg.hidden = false;
         }
 
@@ -192,6 +234,7 @@ if(navLinksEl){
         player.pause();
         player.removeAttribute("src");
         player.load();
+        removeFrame();
         modal.hidden = true;
         document.body.style.overflow = "";
         if(lastFocus) lastFocus.focus();
